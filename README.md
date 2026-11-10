@@ -108,35 +108,44 @@ Stratified cross-validation was used during model optimisation to preserve class
 
 ### 5. Final Model Evaluation
 
-The final model experiment recorded in the notebook was an **Optuna-tuned, class-weighted XGBoost classifier**.
+## Model Evaluation – Weighted XGBoost
 
-Performance on the held-out test dataset:
+The final model evaluated was an Optuna-tuned, class-weighted XGBoost classifier, assessed on a clean, held-out test dataset containing 400 records.
 
-| Metric | Score |
-|---|---:|
-| Accuracy | 85% |
-| Macro F1-score | 0.65 |
-| Weighted F1-score | 0.85 |
+### Classification Report
 
-#### Class-wise Performance
+| Risk Level | Precision | Recall | F1-Score | Support |
+|---|---:|---:|---:|---:|
+| High | 0.73 | 0.66 | 0.69 | 65 |
+| Low | 0.89 | 0.93 | 0.91 | 315 |
+| Medium | 0.50 | 0.25 | 0.33 | 20 |
+| **Macro Average** | **0.71** | **0.61** | **0.65** | **400** |
+| **Weighted Average** | **0.84** | **0.85** | **0.85** | **400** |
 
-| Risk level | Precision | Recall | F1-score |
+**Overall Accuracy: 85%**
+
+### Confusion Matrix
+
+The confusion matrix below shows the actual versus predicted cancer risk levels.
+
+| Actual / Predicted | High | Low | Medium |
 |---|---:|---:|---:|
-| High | 0.50 | 0.45 | 0.47 |
-| Low | 0.76 | 0.78 | 0.77 |
-| Medium | 0.92 | 0.92 | 0.92 |
+| **High** | 43 | 22 | 0 |
+| **Low** | 16 | 294 | 5 |
+| **Medium** | 0 | 15 | 5 |
 
-#### Confusion Matrix
+### Key Observations
 
-Rows represent actual classes and columns represent predicted classes.
+- **Low Risk:** The model performs best on the Low Risk class, achieving 93% recall and an F1-score of 0.91.
+- **High Risk:** The model achieves 66% recall, correctly identifying 43 out of 65 High Risk cases.
+- **Medium Risk:** The model achieves 25% recall, indicating difficulty identifying this class.
+- **Class Imbalance:** The difference in class-wise performance highlights the impact of class imbalance on multiclass classification.
+- **Overall Performance:** The model achieves 85% accuracy and a weighted F1-score of 0.85. However, the macro F1-score of 0.65 indicates that performance varies across risk categories.
 
-| Actual \ Predicted | High | Low | Medium |
-|---|---:|---:|---:|
-| High | 9 | 0 | 11 |
-| Low | 0 | 51 | 14 |
-| Medium | 9 | 16 | 290 |
+### Conclusion
 
-**Key observation:** Although the model achieved 88% accuracy, High-risk recall remained at 45%. This highlights the difficulty of identifying minority classes and the importance of evaluating class-specific performance rather than relying on accuracy alone.
+The Weighted XGBoost model demonstrates promising overall classification performance. However, its lower recall for the Medium Risk class highlights an opportunity for further improvement through class-specific optimization, feature engineering, and hyperparameter tuning.
+
 
 
 ## Key Learnings
